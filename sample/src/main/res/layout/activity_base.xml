@@ -6,10 +6,19 @@
     tools:context=".BaseActivity"
     android:background="#fff">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/activity_availability_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        ></include>
+
     <com.alamkanak.weekview.WeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         app:eventTextColor="@android:color/white"
         app:textSize="12sp"
         app:hourHeight="60dp"
@@ -17,7 +26,7 @@
         app:headerColumnTextColor="@color/toolbar_text"
         app:headerRowPadding="12dp"
         app:columnGap="8dp"
-        app:noOfVisibleDays="3"
+        app:noOfVisibleDays="1"
         app:headerRowBackgroundColor="@color/toolbar"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"

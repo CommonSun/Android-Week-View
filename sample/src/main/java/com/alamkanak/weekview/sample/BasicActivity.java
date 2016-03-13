@@ -52,7 +52,7 @@ public class BasicActivity extends BaseActivity {
                 WeekViewEvent event = new WeekViewEvent(1, calendarEvent.name, startTime, endTime);
                 event.setColor(getResources().getColor(R.color.event_color_01));
                 mEvents.add(event);
-                Log.d(String.valueOf(i), calendarEvent.toString());
+                //Log.d(String.valueOf(i), calendarEvent.toString());
                 i++;
             }
         } else {

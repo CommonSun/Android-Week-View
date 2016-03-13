@@ -50,7 +50,4 @@ public class CalendarContentResolver {
         return calendars;
     }
 
-    public void getEvents(String calendarName) {
-
-    }
 }

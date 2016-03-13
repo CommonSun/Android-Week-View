@@ -3,7 +3,10 @@ package com.alamkanak.weekview.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -12,6 +15,18 @@ import android.view.View;
  * Website: http://alamkanak.github.io
  */
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void onEvent(SelectedAvailabilityTimeSlotsEvent event) {
+        Log.d("", "");
+
     }
 
 }

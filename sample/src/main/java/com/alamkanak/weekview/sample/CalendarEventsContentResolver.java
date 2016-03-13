@@ -51,8 +51,8 @@ public class CalendarEventsContentResolver {
     }
 
     public List<CalendarEvent> getCalendarEvents(long calendarId, long timeStampFrom, long timeStampTo) {
-        Log.d("time", "from "+ timestampToHumanDate(timeStampFrom));
-        Log.d("time", "to   "+ timestampToHumanDate(timeStampTo));
+        //Log.d("time", "from "+ timestampToHumanDate(timeStampFrom));
+        //Log.d("time", "to   "+ timestampToHumanDate(timeStampTo));
 
 
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI

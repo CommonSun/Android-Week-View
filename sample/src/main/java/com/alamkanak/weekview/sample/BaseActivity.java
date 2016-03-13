@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * This is a base activity which contains week view and all the codes necessary to initialize the
@@ -43,6 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     private WeekView mWeekView;
     int generator = 0;
 
+    Toolbar toolbar;
+
     // Populate the week view with some events.
     List<WeekViewEvent> mEvents = new ArrayList<WeekViewEvent>();
     List<WeekViewEvent> mAvailableEvents = new ArrayList<WeekViewEvent>();
@@ -51,6 +55,11 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) findViewById(R.id.weekView);
@@ -79,6 +88,12 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         mWeekView.setNumberOfVisibleDays(1);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_day_view).setChecked(true);
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,6 +108,9 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
         switch (id){
             case R.id.action_today:
                 mWeekView.goToToday();
+                return true;
+            case R.id.action_done:
+                onDone();
                 return true;
             case R.id.action_day_view:
                 if (mWeekViewType != TYPE_DAY_VIEW) {
@@ -203,8 +221,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     }
 
     public String generateUuid(){
-        //return UUID.randomUUID().toString();
-        return String.valueOf(generator++);
+        return UUID.randomUUID().toString();
     }
 
     @Override
@@ -229,6 +246,12 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     public WeekView getWeekView() {
         return mWeekView;
+    }
+
+    private void onDone() {
+        SelectedAvailabilityTimeSlotsEvent event = new SelectedAvailabilityTimeSlotsEvent(mAvailableEvents);
+        EventBus.getDefault().postSticky(event);
+        finish();
     }
 
     protected void checkPermission(){
