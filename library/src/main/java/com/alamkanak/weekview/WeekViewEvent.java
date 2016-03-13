@@ -12,6 +12,7 @@ import static com.alamkanak.weekview.WeekViewUtil.*;
  */
 public class WeekViewEvent {
     private long mId;
+    private String generatedId;
     private Calendar mStartTime;
     private Calendar mEndTime;
     private String mName;
@@ -99,6 +100,14 @@ public class WeekViewEvent {
         this(id, name, null, startTime, endTime);
     }
 
+    public WeekViewEvent(String generated, String name, Calendar startTime, Calendar endTime) {
+        this(0, name, null, startTime, endTime);
+        this.generatedId = generated;
+    }
+
+    public String getGeneratedId() {
+        return generatedId;
+    }
 
     public Calendar getStartTime() {
         return mStartTime;

@@ -50,13 +50,17 @@ public class CalendarEventsContentResolver {
         }
     }
 
-    public List<CalendarEvent> getCalendarEvents(long calendarId, Calendar from, Calendar to) {
+    public List<CalendarEvent> getCalendarEvents(long calendarId, long timeStampFrom, long timeStampTo) {
+        Log.d("time", "from "+ timestampToHumanDate(timeStampFrom));
+        Log.d("time", "to   "+ timestampToHumanDate(timeStampTo));
+
+
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
-        ContentUris.appendId(eventsUriBuilder, from.getTimeInMillis());
-        ContentUris.appendId(eventsUriBuilder, to.getTimeInMillis());
+        ContentUris.appendId(eventsUriBuilder, timeStampFrom);
+        ContentUris.appendId(eventsUriBuilder, timeStampTo);
         Uri eventsUri = eventsUriBuilder.build();
-        Cursor cursor = null;
+        Cursor cursor;
         cursor = contentResolver.
                 query(eventsUri,
                         INSTANCE_FIELDS,
@@ -72,7 +76,6 @@ public class CalendarEventsContentResolver {
                     long eventId = cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.EVENT_ID));
                     CalendarEvent calendarEvent = new CalendarEvent(0l, eventId, begin, end, "", "");
                     toReturn.add(calendarEvent);
-                    //Log.d("Instance event", String.valueOf(eventId) + ", " + timestampToHumanDate(begin) + ", " + timestampToHumanDate(end));
                 }
             }
         } catch (AssertionError ex) {
@@ -83,11 +86,6 @@ public class CalendarEventsContentResolver {
         for (CalendarEvent event : toReturn) {
             String FILTER = CalendarContract.Events.VISIBLE + " = 1"
                     + " AND " + CalendarContract.Events._ID + "=" + event.eventId;
-                    //+ " AND " +
-                    //CalendarContract.Events.DTSTART + " > " + from.getTimeInMillis(); //+
-                    //" AND " + CalendarContract.Events.DTSTART + " < " + to.getTimeInMillis() + ")";
-                    //Log.d("from", timestampToHumanDate(from.getTimeInMillis()));
-                    //Log.d("to", timestampToHumanDate(to.getTimeInMillis()));
                     cursor =
                         contentResolver.
                                 query(EVENTS_URI,
@@ -100,22 +98,6 @@ public class CalendarEventsContentResolver {
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     event.name = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.TITLE));
-                    /*
-                    long id = cursor.getLong(cursor.getColumnIndex(CalendarContract.Events._ID));
-                    long start = cursor.getLong(cursor.getColumnIndex(CalendarContract.Events.DTSTART));
-                    String rrule = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.RRULE));
-                    long end;
-                    if (rrule == null)
-                        end = cursor.getLong(cursor.getColumnIndex(CalendarContract.Events.DTEND));
-                    else {
-                        String rules[] = rrule.split(";");
-                        String until = rules[1].split("=")[1];
-                        end = start + cursor.getLong(cursor.getColumnIndex(CalendarContract.Events.DTEND));
-                    }
-                    String title = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.TITLE));
-                    CalendarEvent calendarEvent = new CalendarEvent(calendarId, id, start, end, rrule, title);
-                    toReturn.add(calendarEvent);
-                    */
                 }
             } catch (AssertionError ex) {
                 Log.e("", "Exception " + ex.toString());
